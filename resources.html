@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>案例与资源 — AI Governance 知识库</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="resources">
+<div id="site-header"></div>
+
+<main>
+  <section class="section">
+    <div class="container">
+      <div class="kicker">Cases & Resources</div>
+      <h1>案例与资源</h1>
+      <p class="section-lead">真实事故是最好的教材，一手文件是最好的教程。本页三部分：<a href="#cases">事故案例</a>（每条附教训与来源）、<a href="#resources">精选资源</a>（框架、报告、数据库、社区）、<a href="#jd">JD 解读</a>（招聘市场在要什么）。</p>
+    </div>
+  </section>
+
+  <!-- 案例 -->
+  <section class="section" id="cases">
+    <div class="container">
+      <h2>事故案例：别人踩过的坑</h2>
+      <p class="section-lead">每个案例回答两个问题：发生了什么、对做治理的人意味着什么。均为公开报道或官方文书记载的真实事件。</p>
+      <div id="case-list"></div>
+    </div>
+  </section>
+
+  <!-- 资源 -->
+  <section class="section" id="resources">
+    <div class="container">
+      <h2>精选资源</h2>
+      <div class="filter-bar">
+        <span class="label">类型：</span>
+        <span id="filter-type" style="display:contents"></span>
+      </div>
+      <div class="grid grid-2" id="resource-list"></div>
+      <p class="small muted mt-2">收录标准：一手来源优先、免费可得优先、持续维护优先。发现失效或过时条目，修改 <code>data/resources.js</code> 即可。</p>
+    </div>
+  </section>
+
+  <!-- JD 解读 -->
+  <section class="section" id="jd">
+    <div class="container">
+      <h2>JD 解读：市场在要什么</h2>
+      <p class="section-lead">基于对公开招聘信息的持续观察（2026-08 更新），总结三类典型岗位的要求模式与背后信号——不引用具体在招职位，只提炼可复用的规律：</p>
+      <div id="jd-list" class="deflist mt-2"></div>
+      <div class="note mt-2"><p>想知道自己离目标岗位差多少？→ <a href="toolkit.html#gap">JD 技能差距分析工具</a></p></div>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script src="assets/app.js"></script>
+<script src="data/resources.js"></script>
+<script>
+// 案例
+document.getElementById("case-list").innerHTML = KB_CASES.map(c => `
+  <div class="acc" id="${c.id}">
+    <div class="acc-head">
+      <div>
+        <div class="t">${esc(c.title)}</div>
+        <div class="small muted">${esc(c.year)} · ${c.tags.map(t => `<span class="tag">${esc(t)}</span>`).join("")}</div>
+      </div>
+      <span class="chev">▶</span>
+    </div>
+    <div class="acc-body">
+      <h4>发生了什么</h4>
+      <p class="muted">${esc(c.what)}</p>
+      <h4>对治理的启示</h4>
+      <p class="muted">${esc(c.lesson)}</p>
+      ${sourceLine(c.source)}
+    </div>
+  </div>`).join("");
+makeAccordion(document.getElementById("case-list"));
+
+// 资源（按类型筛选）
+let currentType = "全部";
+function renderResources() {
+  const list = KB_RESOURCES.filter(r => currentType === "全部" || r.type === currentType);
+  document.getElementById("resource-list").innerHTML = list.map(r => `
+    <div class="card">
+      <div class="card-en">${esc(r.type)} · ${esc(r.lang)}</div>
+      <h3>${r.url ? `<a href="${r.url}" target="_blank" rel="noopener">${esc(r.title)}</a>` : esc(r.title)}</h3>
+      <p>${esc(r.note)}</p>
+      <div class="source-line">${esc(r.org)} · ${esc(r.date)}</div>
+    </div>`).join("");
+}
+const types = ["全部", ...new Set(KB_RESOURCES.map(r => r.type))];
+renderFilterChips(document.getElementById("filter-type"), types.map(v => ({ value: v, label: v })), v => { currentType = v; renderResources(); });
+
+// JD 解读
+document.getElementById("jd-list").innerHTML = KB_JD_PATTERNS.map(j => `
+  <div class="def">
+    <div class="term">${esc(j.role)}</div>
+    <div class="desc"><p>${esc(j.pattern)}</p><p style="margin-bottom:0"><b>${esc(j.signal)}</b></p></div>
+  </div>`).join("");
+</script>
+</body>
+</html>

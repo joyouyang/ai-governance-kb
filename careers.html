@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>职业地图 — AI Governance 知识库</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="careers">
+<div id="site-header"></div>
+
+<main>
+  <section class="section">
+    <div class="container">
+      <div class="kicker">Career Map</div>
+      <h1>职业地图</h1>
+      <p class="section-lead">「AI 治理」不是一个岗位，而是一族岗位：从偏制度的治理项目经理，到偏技术的安全评测工程师，再到前沿实验室的模型政策专家。这一页帮你看清每类岗位做什么、需要什么，以及<strong>从你现在的位置怎么走过去</strong>。</p>
+      <div class="note"><p>看完岗位后，用工具箱的 <a href="toolkit.html#gap">JD 技能差距分析</a>：选定目标岗位、勾选已具备的技能，自动生成差距清单与补齐建议。</p></div>
+    </div>
+  </section>
+
+  <!-- 岗位全景表 -->
+  <section class="section">
+    <div class="container">
+      <h2>岗位全景</h2>
+      <div class="table-wrap mt-2" id="role-overview"></div>
+      <p class="small muted mt-1">「需求热度」为基于公开招聘市场的定性判断（2026-08），随市场变化，仅供参考。</p>
+    </div>
+  </section>
+
+  <!-- 岗位详情 -->
+  <section class="section">
+    <div class="container">
+      <h2>岗位详情</h2>
+      <p class="section-lead">点击展开：职责、技能要求（核心/加分）、常见背景与转型建议。</p>
+      <div id="role-list"></div>
+    </div>
+  </section>
+
+  <!-- 转型路径 -->
+  <section class="section">
+    <div class="container">
+      <h2>从哪来，到哪去：转型路径速查</h2>
+      <p class="section-lead">按你的现有背景查找最短路径。共同的转型心法：<b>先在现岗位做出治理相关的事，再对外讲述</b>——主动认领评审、评测、政策类工作，比裸投简历有效得多。</p>
+      <div class="table-wrap mt-2" id="transition-table"></div>
+    </div>
+  </section>
+
+  <!-- 通用建议 -->
+  <section class="section">
+    <div class="container">
+      <h2>三条通用建议</h2>
+      <div class="grid grid-3 mt-2">
+        <div class="card"><h3>作品 &gt; 证书</h3><p>这个领域太新，没有人靠证书拿到好 offer。一篇对新法规的深度公开分析、一个复现并扩展的评测项目、一份三大实验室安全框架的对比研究——都是比 AIGP 更有力的敲门砖（当然，隐私/合规路线上 IAPP 认证仍有信号价值）。</p></div>
+        <div class="card"><h3>双语能力是杠杆</h3><p>能同时读懂中文监管（网信办规章、备案实务）与英文体系（EU AI Act、NIST）的人在出海公司与跨国公司中稀缺。中英监管桥梁是中文背景从业者的天然差异化定位。</p></div>
+        <div class="card"><h3>选组织形态，而非只选头衔</h3><p>同样叫 AI Governance：在金融公司偏审计与验证，在大厂偏流程与工具，在初创偏「什么都做」，在实验室偏政策与评测。面试时问清楚汇报线（法务？CTO？独立？）与有没有否决权，比头衔更能预测工作内容。</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script src="assets/app.js"></script>
+<script src="data/careers.js"></script>
+<script>
+const skillById = Object.fromEntries(KB_SKILLS.map(s => [s.id, s]));
+const roleById = Object.fromEntries(KB_ROLES.map(r => [r.id, r]));
+
+// 全景表
+document.getElementById("role-overview").innerHTML = `
+  <table>
+    <thead><tr><th>岗位</th><th>方向</th><th>一句话定位</th><th>需求热度</th></tr></thead>
+    <tbody>${KB_ROLES.map(r => `
+      <tr>
+        <td><a href="#${r.id}">${esc(r.title)}</a><span class="en-sub">${esc(r.titleEn)}</span></td>
+        <td>${badge(r.family, r.family === "政策" ? "teal" : r.family === "产品与工程" ? "blue" : "gray")}</td>
+        <td>${esc(r.summary.split("：")[0])}</td>
+        <td>${esc(r.demand)}</td>
+      </tr>`).join("")}
+    </tbody>
+  </table>`;
+
+// 详情卡片
+function skillTags(ids) {
+  return ids.map(id => `<span class="tag">${esc((skillById[id] || { name: id }).name)}</span>`).join("");
+}
+document.getElementById("role-list").innerHTML = KB_ROLES.map(r => `
+  <div class="acc" id="${r.id}">
+    <div class="acc-head">
+      <div>
+        <div class="t">${esc(r.title)} ${badge(r.family, "blue")}</div>
+        <div class="small muted">${esc(r.titleEn)}</div>
+      </div>
+      <span class="chev">▶</span>
+    </div>
+    <div class="acc-body">
+      <p class="muted" style="margin-top:12px">${esc(r.summary)}</p>
+      <h4>典型职责</h4>
+      <ul>${r.responsibilities.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+      <h4>核心技能</h4>
+      <p>${skillTags(r.skills.core)}</p>
+      <h4>加分项</h4>
+      <p>${skillTags(r.skills.plus)}</p>
+      <h4>常见背景</h4>
+      <p class="muted small">${esc(r.backgrounds)}</p>
+      <h4>转型建议</h4>
+      <ul>${r.transition.map(x => `<li>${x}</li>`).join("")}</ul>
+      <h4>典型雇主</h4>
+      <p class="muted small">${esc(r.employers)}</p>
+      <h4>JD 高频关键词</h4>
+      <p>${r.jdKeywords.map(k => `<span class="tag">${esc(k)}</span>`).join("")}</p>
+      <p class="small mt-2"><a href="toolkit.html#gap">→ 对这个岗位做技能差距分析</a></p>
+    </div>
+  </div>`).join("");
+makeAccordion(document.getElementById("role-list"));
+
+// 转型表
+document.getElementById("transition-table").innerHTML = `
+  <table>
+    <thead><tr><th>现有背景</th><th>推荐目标岗位</th><th>路径要点</th></tr></thead>
+    <tbody>${KB_TRANSITIONS.map(t => `
+      <tr>
+        <td>${esc(t.from)}</td>
+        <td>${t.to.map(id => `<a href="#${id}">${esc(roleById[id].title)}</a>`).join("<br>")}</td>
+        <td>${esc(t.note)}</td>
+      </tr>`).join("")}
+    </tbody>
+  </table>`;
+
+// hash 直达展开
+window.addEventListener("load", () => {
+  const id = location.hash.slice(1);
+  const target = id && document.getElementById(id);
+  if (target && target.classList.contains("acc")) {
+    target.classList.add("open");
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+});
+// 页内锚点点击也展开
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener("click", () => {
+    const t = document.getElementById(a.getAttribute("href").slice(1));
+    if (t && t.classList.contains("acc")) t.classList.add("open");
+  });
+});
+</script>
+</body>
+</html>

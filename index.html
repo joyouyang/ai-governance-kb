@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Governance 知识库 — 面向中文读者的 AI 治理学习与职业参考</title>
+<meta name="description" content="系统学习 AI Governance、Responsible AI、AI Safety 与 AI 合规：法规解读、企业实践、职业地图与实用工具。">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="home">
+<div id="site-header"></div>
+
+<main>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <div class="kicker">AI Governance Knowledge Base</div>
+      <h1>让 AI 治理成为一门<br>可以系统学习的手艺</h1>
+      <p class="sub">面向想学习、转行或正在从事 AI Governance、Responsible AI、AI Safety 与 AI 合规的中文读者：把分散在法规文本、框架文件与岗位 JD 里的知识，整理成一张可以按图索骥的地图。</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="map.html">从知识地图开始</a>
+        <a class="btn btn-ghost" href="careers.html">查看职业地图</a>
+        <a class="btn btn-ghost" href="toolkit.html">直接用工具</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 什么是 AI Governance -->
+  <section class="section">
+    <div class="container">
+      <div class="kicker">What is AI Governance</div>
+      <h2>AI Governance 是什么</h2>
+      <p class="section-lead">AI 治理是一套让组织<strong>负责任地开发和使用 AI</strong> 的制度与流程：知道自己有哪些 AI、评估它们的风险、设定上线的门槛、持续监控运行、并在出问题时有人负责与响应。它不是一份原则声明，而是一个持续运转的闭环。</p>
+
+      <div class="flow">
+        <div class="flow-step"><div class="num">01</div><div class="t">建立治理</div><div class="d">政策、负责人、委员会——先回答「谁说了算」</div></div>
+        <div class="flow-step"><div class="num">02</div><div class="t">盘点清单</div><div class="d">AI inventory：知道公司有哪些模型和用例在跑</div></div>
+        <div class="flow-step"><div class="num">03</div><div class="t">风险分级</div><div class="d">按影响与场景分级，把力气花在高风险处</div></div>
+        <div class="flow-step"><div class="num">04</div><div class="t">评测验证</div><div class="d">准确性、安全性、公平性——用证据说话</div></div>
+        <div class="flow-step"><div class="num">05</div><div class="t">发布门禁</div><div class="d">达标才能上线，高风险需独立评审</div></div>
+        <div class="flow-step"><div class="num">06</div><div class="t">监控审计</div><div class="d">上线后持续监控，留下可审计的记录</div></div>
+        <div class="flow-step"><div class="num">07</div><div class="t">事件响应</div><div class="d">出问题时上报、处置、复盘、改进</div></div>
+      </div>
+      <p class="flow-loop-note">↻ 第 7 步的复盘回流到第 1–3 步——治理是循环，不是一次性项目。完整拆解见<a href="practice.html">企业实践</a>。</p>
+    </div>
+  </section>
+
+  <!-- 概念区分 -->
+  <section class="section">
+    <div class="container">
+      <div class="kicker">Related Fields</div>
+      <h2>它和 AI Safety、Responsible AI 有什么区别？</h2>
+      <p class="section-lead">这些词经常混用，但招聘方和从业者眼中它们各有侧重。一张表看清楚：</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>领域</th><th>核心问题</th><th>典型工作</th><th>典型从业者</th></tr></thead>
+          <tbody>
+            <tr><td>AI Governance<span class="en-sub">AI 治理</span></td><td>组织如何有制度地管好 AI？</td><td>清单、分级、流程、评审、审计对接</td><td>项目经理、合规、GRC</td></tr>
+            <tr><td>Responsible AI<span class="en-sub">负责任 AI</span></td><td>如何让 AI 产品公平、透明、可问责？</td><td>公平性评测、模型卡、透明度功能</td><td>产品经理、研究员、工程师</td></tr>
+            <tr><td>AI Safety<span class="en-sub">AI 安全</span></td><td>如何防止 AI 系统造成（灾难性）伤害？</td><td>对齐研究、危险能力评测、红队</td><td>研究员、评测工程师</td></tr>
+            <tr><td>AI Compliance<span class="en-sub">AI 合规</span></td><td>如何满足适用的法律法规？</td><td>法规解读、备案、合规评估、监管沟通</td><td>法务、合规经理</td></tr>
+            <tr><td>Privacy<span class="en-sub">隐私保护</span></td><td>个人数据是否被合法妥善处理？</td><td>DPIA、数据映射、同意管理</td><td>DPO、隐私律师</td></tr>
+            <tr><td>GRC<span class="en-sub">治理·风险·合规</span></td><td>企业整体风险与内控如何运转？</td><td>风险登记、内控、审计——AI 是其新增对象</td><td>风控、内审</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note mt-2"><p><b>一句话记忆：</b>Safety 研究「AI 会不会造成伤害」，Responsible AI 把答案做进产品，Governance 把这一切组织成制度，Compliance 确保制度满足法律，而它们处理个人数据时都踩在 Privacy 的地基上，最终汇入企业 GRC 的大盘。概念之间的完整关系见<a href="map.html">知识地图</a>。</p></div>
+    </div>
+  </section>
+
+  <!-- 栏目入口 -->
+  <section class="section">
+    <div class="container">
+      <div class="kicker">Explore</div>
+      <h2>从这里开始</h2>
+      <div class="grid grid-3 mt-2">
+        <a class="card-link" href="map.html"><div class="card"><div class="card-en">Knowledge Map</div><h3>知识地图</h3><p>核心概念、领域边界、知识图谱与术语表——建立整体认知框架。</p></div></a>
+        <a class="card-link" href="regulations.html"><div class="card"><div class="card-en">Regulations</div><h3>法规与标准</h3><p>EU AI Act、NIST AI RMF、ISO 42001、中国监管四件套……以及它们对企业到底意味着什么。</p></div></a>
+        <a class="card-link" href="practice.html"><div class="card"><div class="card-en">Enterprise Practice</div><h3>企业实践</h3><p>从 AI inventory 到事件响应：治理闭环七个环节的落地要点与常见陷阱。</p></div></a>
+        <a class="card-link" href="careers.html"><div class="card"><div class="card-en">Career Map</div><h3>职业地图</h3><p>八类岗位的职责、技能与转型路径——从你现在的位置出发。</p></div></a>
+        <a class="card-link" href="resources.html"><div class="card"><div class="card-en">Cases & Resources</div><h3>案例与资源</h3><p>真实事故案例、公司一手实践文件、高质量报告与社区。</p></div></a>
+        <a class="card-link" href="toolkit.html"><div class="card"><div class="card-en">Toolkit</div><h3>实用工具</h3><p>风险评估清单、项目 intake 模板、治理成熟度自测、JD 技能差距分析。</p></div></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 监管时间线摘要 -->
+  <section class="section">
+    <div class="container">
+      <div class="kicker">Regulatory Milestones</div>
+      <h2>为什么是现在：监管时间线</h2>
+      <p class="section-lead">过去几年，AI 治理从「原则倡议」走进了「法定义务」。几个关键节点：</p>
+      <div class="timeline" id="home-timeline">
+        <div class="tl-item"><div class="date">2023-01</div><div class="ev">NIST 发布 AI RMF 1.0，企业风险管理有了通用语言</div></div>
+        <div class="tl-item"><div class="date">2023-08</div><div class="ev">中国《生成式人工智能服务管理暂行办法》施行，大模型备案时代开始</div></div>
+        <div class="tl-item"><div class="date">2023-12</div><div class="ev">ISO/IEC 42001 发布，AI 治理可以被认证</div></div>
+        <div class="tl-item"><div class="date">2024-08</div><div class="ev">欧盟 AI Act 生效，义务分阶段落地（2025 禁令与 GPAI → 2026 高风险）</div></div>
+        <div class="tl-item"><div class="date">2025-09</div><div class="ev">中国 AI 生成内容标识办法施行；美国州级立法（科罗拉多等）陆续到来</div></div>
+        <div class="tl-item"><div class="date">2026-08</div><div class="ev">EU AI Act 高风险义务全面适用——多数企业的合规大考</div></div>
+      </div>
+      <p class="small muted">各条目的来源与准确日期见<a href="regulations.html">法规与标准</a>页内对应条目。</p>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script src="assets/app.js"></script>
+</body>
+</html>

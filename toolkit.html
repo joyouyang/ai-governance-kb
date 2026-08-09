@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>工具箱 — AI Governance 知识库</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="toolkit">
+<div id="site-header"></div>
+
+<main>
+  <section class="section">
+    <div class="container">
+      <div class="kicker">Toolkit</div>
+      <h1>工具箱</h1>
+      <p class="section-lead">四个可直接使用的工具，全部在浏览器本地运行，<strong>不上传任何数据</strong>。方法论参考 NIST AI RMF、EU AI Act 与 ISO/IEC 23894（详见<a href="regulations.html">法规页</a>）；结果为学习与内部参考用途，不构成合规意见。</p>
+      <div class="grid grid-4 mt-2">
+        <a class="card-link" href="#checklist"><div class="card"><h3>风险评估清单</h3><p>27 项检查，7 个维度，标出红线项</p></div></a>
+        <a class="card-link" href="#intake"><div class="card"><h3>项目 Intake 模板</h3><p>填写后生成 Markdown + 初步风险信号</p></div></a>
+        <a class="card-link" href="#maturity"><div class="card"><h3>治理成熟度自测</h3><p>15 题，5 维度，输出等级与改进建议</p></div></a>
+        <a class="card-link" href="#gap"><div class="card"><h3>JD 技能差距分析</h3><p>选目标岗位，勾选技能，生成补齐计划</p></div></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 工具1：风险评估清单 -->
+  <section class="section anchor-offset" id="checklist">
+    <div class="container">
+      <h2>① AI 用例风险评估清单</h2>
+      <p class="section-lead">针对<strong>一个具体的 AI 用例</strong>逐项作答。标 <span class="badge badge-warn">红线</span> 的条目若「未落实」，通常意味着不应上线。</p>
+      <div class="tool-panel" id="checklist-form"></div>
+      <div style="margin-top:16px"><button class="btn btn-primary" id="checklist-submit">生成评估结果</button></div>
+      <div class="result-box" id="checklist-result"></div>
+    </div>
+  </section>
+
+  <!-- 工具2：Intake 模板 -->
+  <section class="section anchor-offset" id="intake">
+    <div class="container">
+      <h2>② AI 项目 Intake 模板</h2>
+      <p class="section-lead">新项目进入治理流程的第一张表。填写后生成 Markdown（可贴入任何文档/工单系统），并根据答案提示初步风险信号。</p>
+      <div class="tool-panel"><div class="form-grid" id="intake-form"></div></div>
+      <div style="margin-top:16px"><button class="btn btn-primary" id="intake-submit">生成 Markdown 与风险信号</button></div>
+      <div class="result-box" id="intake-result"></div>
+    </div>
+  </section>
+
+  <!-- 工具3：成熟度自测 -->
+  <section class="section anchor-offset" id="maturity">
+    <div class="container">
+      <h2>③ AI 治理成熟度自测</h2>
+      <p class="section-lead">从组织视角回答 15 个问题（每题选最接近现状的一项），评估你所在公司/团队的治理成熟度。</p>
+      <div class="tool-panel" id="maturity-form"></div>
+      <div style="margin-top:16px"><button class="btn btn-primary" id="maturity-submit">查看评估结果</button></div>
+      <div class="result-box" id="maturity-result"></div>
+    </div>
+  </section>
+
+  <!-- 工具4：JD 差距分析 -->
+  <section class="section anchor-offset" id="gap">
+    <div class="container">
+      <h2>④ JD 技能差距分析</h2>
+      <p class="section-lead">选择目标岗位，勾选你<strong>已具备</strong>的技能（以「能在面试中举出实例」为标准），生成差距清单与补齐建议。岗位详情见<a href="careers.html">职业地图</a>。</p>
+      <div class="tool-panel">
+        <div class="f-field" style="max-width:420px">
+          <label for="gap-role">目标岗位</label>
+          <select id="gap-role"></select>
+        </div>
+        <p class="small muted mt-1" id="gap-role-summary"></p>
+        <div id="gap-skills" class="mt-2"></div>
+      </div>
+      <div style="margin-top:16px"><button class="btn btn-primary" id="gap-submit">生成差距分析</button></div>
+      <div class="result-box" id="gap-result"></div>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script src="assets/app.js"></script>
+<script src="data/toolkit-data.js"></script>
+<script src="data/careers.js"></script>
+<script>
+/* ---------- 通用：选项按钮组 ---------- */
+function optRow(name, opts, values) {
+  return `<div class="opt-row" data-name="${name}">` +
+    opts.map((o, i) => `<button type="button" class="opt" data-v="${values ? values[i] : i}">${esc(o)}</button>`).join("") +
+    `</div>`;
+}
+function bindOptRows(container, answers) {
+  container.querySelectorAll(".opt-row").forEach(row => {
+    row.querySelectorAll(".opt").forEach(btn => {
+      btn.addEventListener("click", () => {
+        row.querySelectorAll(".opt").forEach(b => b.classList.remove("sel"));
+        btn.classList.add("sel");
+        answers[row.dataset.name] = btn.dataset.v;
+      });
+    });
+  });
+}
+function barClass(pct) { return pct < 40 ? "low" : pct < 75 ? "mid" : "high"; }
+
+/* ========== 工具1：风险评估清单 ========== */
+const clAnswers = {};
+document.getElementById("checklist-form").innerHTML = KB_CHECKLIST.map((g, gi) => `
+  <h3 style="margin-top:${gi ? "22px" : "0"}">${esc(g.group)}</h3>
+  ${g.items.map((it, ii) => `
+    <div class="q-item">
+      <div class="q-text">${esc(it.text)} ${it.critical ? '<span class="badge badge-warn">红线</span>' : ""}
+        ${it.hint ? `<span class="q-hint">${esc(it.hint)}</span>` : ""}
+      </div>
+      ${optRow(`cl-${gi}-${ii}`, ["已落实", "部分落实", "未落实", "不适用"], ["2", "1", "0", "na"])}
+    </div>`).join("")}
+`).join("");
+bindOptRows(document.getElementById("checklist-form"), clAnswers);
+
+document.getElementById("checklist-submit").addEventListener("click", () => {
+  let bars = "", redFlags = [], unanswered = 0;
+  KB_CHECKLIST.forEach((g, gi) => {
+    let got = 0, max = 0;
+    g.items.forEach((it, ii) => {
+      const v = clAnswers[`cl-${gi}-${ii}`];
+      if (v === undefined) { unanswered++; return; }
+      if (v === "na") return;
+      got += Number(v); max += 2;
+      if (it.critical && v === "0") redFlags.push(`${g.group.slice(0, 1)}：${it.text}`);
+    });
+    const pct = max ? Math.round(got / max * 100) : 100;
+    bars += `<div class="bar-row"><div class="bl">${esc(g.group)}</div><div class="bar-track"><div class="bar-fill ${barClass(pct)}" style="width:${pct}%"></div></div><div class="bv">${max ? pct + "%" : "N/A"}</div></div>`;
+  });
+  const box = document.getElementById("checklist-result");
+  box.className = "result-box show";
+  box.innerHTML = `
+    <h4>评估结果</h4>
+    ${bars}
+    ${redFlags.length ? `<div class="note warn mt-2"><p><b>⚠ ${redFlags.length} 个红线项未落实（建议阻断上线，优先解决）：</b></p><ul>${redFlags.map(f => `<li>${esc(f)}</li>`).join("")}</ul></div>` : `<div class="note teal mt-2"><p><b>✓ 所有已作答的红线项均已落实或部分落实。</b>请继续补齐得分较低的维度。</p></div>`}
+    ${unanswered ? `<p class="small muted mt-1">有 ${unanswered} 项未作答，未计入得分。</p>` : ""}
+    <p class="small muted mt-1">建议把本结果连同证据（评测报告、评估文档）归档到项目记录中。</p>`;
+  box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
+
+/* ========== 工具2：Intake 模板 ========== */
+document.getElementById("intake-form").innerHTML = KB_INTAKE_FIELDS.map(f => {
+  const wide = f.type === "textarea" || f.type === "checks";
+  let control = "";
+  if (f.type === "text") control = `<input type="text" id="in-${f.id}" placeholder="${esc(f.ph || "")}">`;
+  if (f.type === "textarea") control = `<textarea id="in-${f.id}" rows="2" placeholder="${esc(f.ph || "")}"></textarea>`;
+  if (f.type === "select") control = `<select id="in-${f.id}"><option value="">— 请选择 —</option>${f.opts.map(o => `<option>${esc(o)}</option>`).join("")}</select>`;
+  if (f.type === "checks") control = `<div class="check-row" id="in-${f.id}">${f.opts.map(o => `<label><input type="checkbox" value="${esc(o)}">${esc(o)}</label>`).join("")}</div>`;
+  return `<div class="f-field ${wide ? "span2" : ""}"><label for="in-${f.id}">${esc(f.label)}</label>${control}</div>`;
+}).join("");
+
+document.getElementById("intake-submit").addEventListener("click", () => {
+  const val = {};
+  KB_INTAKE_FIELDS.forEach(f => {
+    if (f.type === "checks") {
+      val[f.id] = [...document.querySelectorAll(`#in-${f.id} input:checked`)].map(c => c.value);
+    } else {
+      val[f.id] = document.getElementById(`in-${f.id}`).value.trim();
+    }
+  });
+
+  // 初步风险信号
+  const signals = [];
+  if (val.regions.includes("欧盟/欧洲经济区")) signals.push("部署到欧盟：需做 EU AI Act 适用性分析（是否高风险/透明度义务），确认提供者/部署者角色。");
+  if (val.regions.includes("中国大陆")) signals.push("部署到中国大陆：确认是否面向公众提供生成式服务（备案义务）；2025-09 起 AI 生成内容须落实显式+隐式标识。");
+  if (val.decision && val.decision.startsWith("是")) signals.push("影响个人重要决定：大概率属高风险用例——需要公平性评测、人工监督与申诉渠道；完全自动化决定还涉及 GDPR 第22条限制。");
+  if (val.decision === "不确定") signals.push("「是否影响个人重要决定」不确定：这是分级的关键问题，请在评审前与法务/治理团队确认。");
+  if (val.dataTypes.includes("敏感个人信息（生物识别/健康/金融等）")) signals.push("涉及敏感个人信息：需要 DPIA/个人信息保护影响评估，确认单独同意等合法性基础。");
+  if (val.dataTypes.includes("个人信息") && !val.dataTypes.includes("敏感个人信息（生物识别/健康/金融等）")) signals.push("涉及个人信息：确认合法性基础与告知；训练/微调用途需单独评估。");
+  if (val.dataTypes.includes("公司机密/内部数据")) signals.push("涉及内部机密数据：审查模型服务商的数据使用条款（是否用于训练）、访问控制与日志。");
+  if (val.capability === "Agent（可调用工具执行操作）") signals.push("Agent 类应用：重点评估工具权限最小化、提示注入攻击面与操作审计日志。");
+  if (val.capability === "预测/评分（影响个人决定）") signals.push("评分类模型：准备分组公平性评测（参考 impact ratio 方法）。");
+  if (val.modelSource === "第三方 API（OpenAI/Anthropic 等）") signals.push("第三方模型：收集供应商 system card 与合规文档，做本场景增量评测；明确双方责任划分。");
+  if (!signals.length) signals.push("未触发明显风险信号。仍建议完成基础清单登记与轻量评估。");
+
+  const md = [
+    `# AI 项目 Intake：${val.name || "（未命名）"}`,
+    ``,
+    `| 字段 | 内容 |`,
+    `| --- | --- |`,
+    ...KB_INTAKE_FIELDS.map(f => `| ${f.label} | ${Array.isArray(val[f.id]) ? val[f.id].join("、") || "—" : val[f.id] || "—"} |`),
+    ``,
+    `## 初步风险信号（自动生成，需人工确认）`,
+    ...signals.map(s => `- ${s}`),
+    ``,
+    `> 由 AI Governance 知识库 intake 工具生成 · 仅供内部评估参考`,
+  ].join("\n");
+
+  const box = document.getElementById("intake-result");
+  box.className = "result-box show";
+  box.innerHTML = `
+    <h4>初步风险信号</h4>
+    <ul>${signals.map(s => `<li>${esc(s)}</li>`).join("")}</ul>
+    <h4 class="mt-2">Markdown（复制到你的文档/工单系统）</h4>
+    <pre class="md-out" id="intake-md">${esc(md)}</pre>
+    <button class="btn btn-ghost btn-small" id="intake-copy">复制 Markdown</button>`;
+  document.getElementById("intake-copy").addEventListener("click", async (e) => {
+    try {
+      await navigator.clipboard.writeText(md);
+      e.target.textContent = "✓ 已复制";
+    } catch {
+      const range = document.createRange();
+      range.selectNodeContents(document.getElementById("intake-md"));
+      const sel = getSelection(); sel.removeAllRanges(); sel.addRange(range);
+      e.target.textContent = "已全选，请按 Ctrl/Cmd+C 复制";
+    }
+  });
+  box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
+
+/* ========== 工具3：成熟度自测 ========== */
+const mtAnswers = {};
+document.getElementById("maturity-form").innerHTML = KB_MATURITY.dimensions.map((d, di) => `
+  <h3 style="margin-top:${di ? "22px" : "0"}">${esc(d.name)}</h3>
+  ${d.questions.map((q, qi) => `
+    <div class="q-item">
+      <div class="q-text">${esc(q.q)}</div>
+      ${optRow(`mt-${di}-${qi}`, q.opts)}
+    </div>`).join("")}
+`).join("");
+bindOptRows(document.getElementById("maturity-form"), mtAnswers);
+
+document.getElementById("maturity-submit").addEventListener("click", () => {
+  const dims = KB_MATURITY.dimensions;
+  let answered = 0, totalSum = 0, totalCnt = 0, bars = "", weakest = null;
+  dims.forEach((d, di) => {
+    let sum = 0, cnt = 0;
+    d.questions.forEach((q, qi) => {
+      const v = mtAnswers[`mt-${di}-${qi}`];
+      if (v !== undefined) { sum += Number(v); cnt++; answered++; }
+    });
+    const avg = cnt ? sum / cnt : 0;
+    const pct = Math.round(avg / 3 * 100);
+    totalSum += sum; totalCnt += cnt;
+    if (cnt && (!weakest || avg < weakest.avg)) weakest = { name: d.name, avg };
+    bars += `<div class="bar-row"><div class="bl">${esc(d.name)}</div><div class="bar-track"><div class="bar-fill ${barClass(pct)}" style="width:${pct}%"></div></div><div class="bv">${cnt ? pct + "%" : "—"}</div></div>`;
+  });
+  const box = document.getElementById("maturity-result");
+  box.className = "result-box show";
+  if (!answered) {
+    box.innerHTML = `<p>请至少回答一部分问题再生成结果。</p>`;
+    return;
+  }
+  const avg = totalSum / totalCnt;
+  const lv = avg < 0.6 ? 0 : avg < 1.2 ? 1 : avg < 1.9 ? 2 : avg < 2.5 ? 3 : 4;
+  const L = KB_MATURITY.levels[lv];
+  box.innerHTML = `
+    <h4>成熟度评估：Level ${L.level} · ${esc(L.name)}</h4>
+    <p class="muted small">${esc(L.desc)}</p>
+    <div class="mt-2">${bars}</div>
+    ${weakest ? `<p class="small mt-1"><b>最薄弱维度：</b>${esc(weakest.name)}</p>` : ""}
+    <div class="note mt-2"><p><b>下一步建议：</b>${esc(L.next)}</p></div>
+    ${answered < 15 ? `<p class="small muted">你回答了 ${answered}/15 题，结果按已答题计算。</p>` : ""}
+    <p class="small muted">评估维度设计参考 NIST AI RMF「Govern」职能与 ISO/IEC 42001 管理体系要求；结果仅供内部参考。</p>`;
+  box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
+
+/* ========== 工具4：JD 差距分析 ========== */
+const skillById2 = Object.fromEntries(KB_SKILLS.map(s => [s.id, s]));
+const catById = Object.fromEntries(KB_SKILL_CATEGORIES.map(c => [c.id, c.name]));
+const roleSel = document.getElementById("gap-role");
+roleSel.innerHTML = KB_ROLES.map(r => `<option value="${r.id}">${esc(r.title)}（${esc(r.titleEn)}）</option>`).join("");
+
+function renderGapSkills() {
+  const role = KB_ROLES.find(r => r.id === roleSel.value);
+  document.getElementById("gap-role-summary").textContent = role.summary;
+  const relevant = [...role.skills.core, ...role.skills.plus];
+  const byCat = {};
+  relevant.forEach(id => {
+    const s = skillById2[id];
+    if (!s) return;
+    (byCat[s.cat] = byCat[s.cat] || []).push(s);
+  });
+  document.getElementById("gap-skills").innerHTML =
+    `<p class="small muted">勾选你已具备的技能（标 ★ 为该岗位核心技能）：</p>` +
+    Object.entries(byCat).map(([cat, skills]) => `
+      <div class="skill-cat">
+        <div class="cat-name">${esc(catById[cat] || cat)}</div>
+        <div class="check-row">
+          ${skills.map(s => `<label><input type="checkbox" value="${s.id}">${role.skills.core.includes(s.id) ? "★ " : ""}${esc(s.name)}</label>`).join("")}
+        </div>
+      </div>`).join("");
+}
+roleSel.addEventListener("change", renderGapSkills);
+renderGapSkills();
+
+document.getElementById("gap-submit").addEventListener("click", () => {
+  const role = KB_ROLES.find(r => r.id === roleSel.value);
+  const have = new Set([...document.querySelectorAll("#gap-skills input:checked")].map(c => c.value));
+  const coreMissing = role.skills.core.filter(id => !have.has(id));
+  const plusMissing = role.skills.plus.filter(id => !have.has(id));
+  const corePct = Math.round((role.skills.core.length - coreMissing.length) / role.skills.core.length * 100);
+  const box = document.getElementById("gap-result");
+  box.className = "result-box show";
+  const learnItem = id => {
+    const s = skillById2[id];
+    return `<li><b>${esc(s.name)}</b><br><span class="small muted">怎么补：${esc(s.learn)}</span></li>`;
+  };
+  box.innerHTML = `
+    <h4>目标岗位：${esc(role.title)}</h4>
+    <div class="bar-row"><div class="bl">核心技能覆盖</div><div class="bar-track"><div class="bar-fill ${barClass(corePct)}" style="width:${corePct}%"></div></div><div class="bv">${corePct}%</div></div>
+    ${coreMissing.length ? `<h4 class="mt-2">优先补齐（核心技能缺口 ${coreMissing.length} 项）</h4><ul>${coreMissing.map(learnItem).join("")}</ul>` : `<div class="note teal mt-2"><p><b>✓ 核心技能已全部覆盖。</b>把每项技能整理成可讲述的实例（STAR 结构），并开始准备作品集。</p></div>`}
+    ${plusMissing.length ? `<h4 class="mt-2">次优先（加分项缺口 ${plusMissing.length} 项）</h4><ul>${plusMissing.map(learnItem).join("")}</ul>` : ""}
+    <div class="note mt-2"><p><b>提醒：</b>技能清单来自对招聘市场的归纳（<a href="resources.html#jd">JD 解读</a>），具体岗位要求以目标公司 JD 为准。差距大不必沮丧——先补 2–3 项核心技能并产出一个作品，通常就能进入面试范围。</p></div>`;
+  box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
+</script>
+</body>
+</html>

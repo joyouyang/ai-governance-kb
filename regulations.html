@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>法规与标准 — AI Governance 知识库</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="regs">
+<div id="site-header"></div>
+
+<main>
+  <section class="section">
+    <div class="container">
+      <div class="kicker">Regulations & Standards</div>
+      <h1>法规与标准</h1>
+      <p class="section-lead">每个条目回答四个问题：它是什么、什么时候生效、适用于谁、<strong>对企业到底意味着什么</strong>。硬法（有强制力）、软法/框架（自愿但有实际影响力）与标准（可认证）分开标注。所有条目附来源与日期，引用前请核对官方最新文本。</p>
+
+      <div class="filter-bar">
+        <span class="label">地区：</span>
+        <span id="filter-region" style="display:contents"></span>
+      </div>
+      <div class="filter-bar" style="margin-top:-10px">
+        <span class="label">类型：</span>
+        <span id="filter-kind" style="display:contents"></span>
+      </div>
+
+      <div id="reg-list"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>三大基准怎么配合：EU AI Act × NIST AI RMF × ISO 42001</h2>
+      <p class="section-lead">这三份文件是全球 AI 治理的「公共语言」，角色互补而非竞争：</p>
+      <div class="table-wrap" id="comparison-table"></div>
+      <div class="note mt-2"><p><b>实务建议：</b>用 NIST AI RMF 设计风险管理的<b>方法</b>，用 ISO 42001 组织成可审计的<b>体系</b>，再把 EU AI Act（及其他适用硬法）的具体义务作为体系中的<b>合规要求清单</b>——一次建设，多处复用。科罗拉多州 AI 法案明确认可这一路径。</p></div>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script src="assets/app.js"></script>
+<script src="data/regulations.js"></script>
+<script>
+const kindTone = { "硬法": "warn", "软法/框架": "teal", "标准": "blue" };
+let currentRegion = "全部", currentKind = "全部";
+
+function regCard(r) {
+  return `
+  <div class="acc" id="${r.id}">
+    <div class="acc-head">
+      <div>
+        <div class="t">${esc(r.name)} ${badge(r.kind, kindTone[r.kind])} ${badge(r.region, "gray")}</div>
+        <div class="small muted">${esc(r.nameEn)} · ${esc(r.status)}</div>
+      </div>
+      <span class="chev">▶</span>
+    </div>
+    <div class="acc-body">
+      <p class="muted" style="margin-top:12px">${esc(r.oneLiner)}</p>
+      <h4>关键时间线</h4>
+      <div class="timeline">${r.timeline.map(t => `<div class="tl-item"><div class="date">${esc(t.date)}</div><div class="ev">${esc(t.event)}</div></div>`).join("")}</div>
+      <h4>适用于谁</h4>
+      <p class="muted small">${esc(r.appliesTo)}</p>
+      <h4>核心内容</h4>
+      <ul>${r.keyPoints.map(k => `<li>${k}</li>`).join("")}</ul>
+      <h4>对企业意味着什么</h4>
+      <ul>${r.impact.map(k => `<li>${k}</li>`).join("")}</ul>
+      ${sourceLine(r.source)}
+    </div>
+  </div>`;
+}
+
+function renderRegs() {
+  const list = KB_REGULATIONS.filter(r =>
+    (currentRegion === "全部" || r.region === currentRegion) &&
+    (currentKind === "全部" || r.kind === currentKind)
+  );
+  const el = document.getElementById("reg-list");
+  el.innerHTML = list.length
+    ? list.map(regCard).join("")
+    : `<p class="muted">该筛选条件下暂无条目。</p>`;
+  makeAccordion(el);
+}
+
+const regions = ["全部", ...new Set(KB_REGULATIONS.map(r => r.region))];
+const kinds = ["全部", ...new Set(KB_REGULATIONS.map(r => r.kind))];
+renderFilterChips(document.getElementById("filter-region"), regions.map(v => ({ value: v, label: v })), v => { currentRegion = v; renderRegs(); });
+renderFilterChips(document.getElementById("filter-kind"), kinds.map(v => ({ value: v, label: v })), v => { currentKind = v; renderRegs(); });
+
+// 对比表
+const cmp = KB_REG_COMPARISON;
+document.getElementById("comparison-table").innerHTML = `
+  <table>
+    <thead><tr>${cmp.columns.map(c => `<th>${esc(c)}</th>`).join("")}</tr></thead>
+    <tbody>${cmp.rows.map(row => `<tr>${row.map((c, i) => `<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody>
+  </table>`;
+
+// 支持 #anchor 直达并展开对应条目
+window.addEventListener("load", () => {
+  const id = location.hash.slice(1);
+  if (!id) return;
+  const target = document.getElementById(id);
+  if (target && target.classList.contains("acc")) {
+    target.classList.add("open");
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+});
+</script>
+</body>
+</html>

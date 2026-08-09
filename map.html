@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>知识地图 — AI Governance 知识库</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="map">
+<div id="site-header"></div>
+
+<main>
+  <section class="section">
+    <div class="container">
+      <div class="kicker">Knowledge Map</div>
+      <h1>知识地图</h1>
+      <p class="section-lead">先建立整体框架，再深入细节。这一页回答三个问题：AI Governance 到底在治理什么？它和相邻领域如何分工？这个领域的知识由哪些模块组成？</p>
+    </div>
+  </section>
+
+  <!-- 核心概念 -->
+  <section class="section">
+    <div class="container">
+      <h2>三个核心认知</h2>
+      <div class="deflist mt-2">
+        <div class="def">
+          <div class="term">① 治理的对象是「用例」，不只是「模型」</div>
+          <div class="desc">同一个模型，用来写营销文案和用来筛选简历，风险完全不同。所以成熟的治理体系都以<b>用例（use case）</b>为单位登记和分级——这也是 EU AI Act 按「预期用途」划定高风险的原因。模型层的治理（评测、能力阈值）与用例层的治理（场景审批、部署条件）是两个互补的层面。</div>
+        </div>
+        <div class="def">
+          <div class="term">② 治理是闭环流程，不是文件柜</div>
+          <div class="desc">原则声明和政策文件只是起点。有效的治理体现在<b>决策被真实改变</b>：有项目因为评测不达标被推迟上线，有高风险用例因为缺少人工监督被要求整改，有事件被上报并触发复盘。判断一家公司治理成熟度，看它的流程有没有「牙齿」。完整闭环见<a href="practice.html">企业实践</a>。</div>
+        </div>
+        <div class="def">
+          <div class="term">③ 外部要求最终收敛为一套内部体系</div>
+          <div class="desc">EU AI Act、NIST RMF、ISO 42001、中国备案要求……看似繁多，但企业内部落地时收敛为同一套东西：<b>清单、分级、评估、评测、门禁、监控、文档</b>。学习时抓住这套「公共内核」，再按司法辖区记差异，效率最高。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 知识图谱 -->
+  <section class="section">
+    <div class="container">
+      <h2>领域知识图谱</h2>
+      <p class="section-lead">AI Governance 位于多个领域的交汇处。深色节点是本站主线，点击可跳转对应页面：</p>
+      <div class="kg-wrap">
+        <svg viewBox="0 0 960 560" role="img" aria-label="AI Governance 领域知识图谱">
+          <!-- 边：核心 → 领域 -->
+          <line class="kg-edge-strong" x1="480" y1="268" x2="190" y2="104" />
+          <line class="kg-edge-strong" x1="480" y1="268" x2="490" y2="84" />
+          <line class="kg-edge-strong" x1="480" y1="268" x2="800" y2="104" />
+          <line class="kg-edge-strong" x1="480" y1="268" x2="840" y2="272" />
+          <line class="kg-edge-strong" x1="480" y1="268" x2="770" y2="452" />
+          <line class="kg-edge-strong" x1="480" y1="268" x2="160" y2="272" />
+          <line class="kg-edge-strong" x1="480" y1="268" x2="250" y2="452" />
+          <line class="kg-edge-strong" x1="480" y1="268" x2="490" y2="452" />
+          <!-- 边：领域 → 叶子 -->
+          <line class="kg-edge" x1="190" y1="104" x2="95" y2="185" />
+          <line class="kg-edge" x1="190" y1="104" x2="255" y2="185" />
+          <line class="kg-edge" x1="490" y1="84" x2="390" y2="165" />
+          <line class="kg-edge" x1="490" y1="84" x2="575" y2="165" />
+          <line class="kg-edge" x1="800" y1="104" x2="705" y2="185" />
+          <line class="kg-edge" x1="800" y1="104" x2="865" y2="185" />
+          <line class="kg-edge" x1="840" y1="272" x2="855" y2="352" />
+          <line class="kg-edge" x1="770" y1="452" x2="800" y2="522" />
+          <line class="kg-edge" x1="250" y1="452" x2="120" y2="522" />
+          <line class="kg-edge" x1="250" y1="452" x2="300" y2="522" />
+          <line class="kg-edge" x1="490" y1="452" x2="520" y2="522" />
+          <line class="kg-edge" x1="160" y1="272" x2="80" y2="352" />
+          <line class="kg-edge" x1="160" y1="272" x2="235" y2="352" />
+
+          <!-- 核心节点 -->
+          <a class="kg-link" href="practice.html">
+            <rect class="kg-node-box core" x="392" y="240" width="176" height="56" rx="8" />
+            <text class="kg-label core" x="480" y="264" text-anchor="middle">AI Governance</text>
+            <text class="kg-label en core" x="480" y="282" text-anchor="middle">清单 · 分级 · 门禁 · 监控</text>
+          </a>
+
+          <!-- 领域节点 -->
+          <a class="kg-link" href="careers.html#safety-evals">
+            <rect class="kg-node-box domain" x="120" y="82" width="140" height="44" rx="7" />
+            <text class="kg-label domain" x="190" y="101" text-anchor="middle">AI Safety</text>
+            <text class="kg-label en" x="190" y="117" text-anchor="middle">防止 AI 造成伤害</text>
+          </a>
+          <a class="kg-link" href="careers.html#rai-pm">
+            <rect class="kg-node-box domain" x="415" y="62" width="150" height="44" rx="7" />
+            <text class="kg-label domain" x="490" y="81" text-anchor="middle">Responsible AI</text>
+            <text class="kg-label en" x="490" y="97" text-anchor="middle">公平 · 透明 · 可问责</text>
+          </a>
+          <a class="kg-link" href="regulations.html">
+            <rect class="kg-node-box domain" x="730" y="82" width="140" height="44" rx="7" />
+            <text class="kg-label domain" x="800" y="101" text-anchor="middle">AI Compliance</text>
+            <text class="kg-label en" x="800" y="117" text-anchor="middle">满足法定义务</text>
+          </a>
+          <a class="kg-link" href="regulations.html#gdpr">
+            <rect class="kg-node-box domain" x="780" y="250" width="120" height="44" rx="7" />
+            <text class="kg-label domain" x="840" y="269" text-anchor="middle">Privacy</text>
+            <text class="kg-label en" x="840" y="285" text-anchor="middle">个人数据保护</text>
+          </a>
+          <a class="kg-link" href="regulations.html#iso-42001">
+            <rect class="kg-node-box domain" x="710" y="430" width="120" height="44" rx="7" />
+            <text class="kg-label domain" x="770" y="449" text-anchor="middle">GRC / 内控</text>
+            <text class="kg-label en" x="770" y="465" text-anchor="middle">风险 · 审计 · 认证</text>
+          </a>
+          <a class="kg-link" href="careers.html#policy-research">
+            <rect class="kg-node-box domain" x="90" y="250" width="140" height="44" rx="7" />
+            <text class="kg-label domain" x="160" y="269" text-anchor="middle">AI 公共政策</text>
+            <text class="kg-label en" x="160" y="285" text-anchor="middle">立法 · 标准 · 国际协调</text>
+          </a>
+          <a class="kg-link" href="practice.html">
+            <rect class="kg-node-box domain" x="180" y="430" width="140" height="44" rx="7" />
+            <text class="kg-label domain" x="250" y="449" text-anchor="middle">企业实践</text>
+            <text class="kg-label en" x="250" y="465" text-anchor="middle">治理闭环七环节</text>
+          </a>
+          <a class="kg-link" href="careers.html">
+            <rect class="kg-node-box domain" x="420" y="430" width="140" height="44" rx="7" />
+            <text class="kg-label domain" x="490" y="449" text-anchor="middle">职业地图</text>
+            <text class="kg-label en" x="490" y="465" text-anchor="middle">八类岗位与转型</text>
+          </a>
+
+          <!-- 叶子节点 -->
+          <a class="kg-link" href="resources.html"><rect class="kg-node-box leaf" x="40" y="167" width="110" height="36" rx="6" /><text class="kg-label" x="95" y="189" text-anchor="middle">对齐与红队</text></a>
+          <a class="kg-link" href="careers.html#safety-evals"><rect class="kg-node-box leaf" x="205" y="167" width="100" height="36" rx="6" /><text class="kg-label" x="255" y="189" text-anchor="middle">安全评测</text></a>
+          <a class="kg-link" href="toolkit.html#checklist"><rect class="kg-node-box leaf" x="335" y="147" width="110" height="36" rx="6" /><text class="kg-label" x="390" y="169" text-anchor="middle">公平性评测</text></a>
+          <a class="kg-link" href="resources.html"><rect class="kg-node-box leaf" x="520" y="147" width="110" height="36" rx="6" /><text class="kg-label" x="575" y="169" text-anchor="middle">模型卡/披露</text></a>
+          <a class="kg-link" href="regulations.html#eu-ai-act"><rect class="kg-node-box leaf" x="650" y="167" width="110" height="36" rx="6" /><text class="kg-label" x="705" y="189" text-anchor="middle">EU AI Act</text></a>
+          <a class="kg-link" href="regulations.html#cn-genai"><rect class="kg-node-box leaf" x="815" y="167" width="100" height="36" rx="6" /><text class="kg-label" x="865" y="189" text-anchor="middle">中国监管</text></a>
+          <a class="kg-link" href="regulations.html#gdpr"><rect class="kg-node-box leaf" x="800" y="334" width="110" height="36" rx="6" /><text class="kg-label" x="855" y="356" text-anchor="middle">GDPR / PIPL</text></a>
+          <a class="kg-link" href="regulations.html#iso-42001"><rect class="kg-node-box leaf" x="745" y="504" width="110" height="36" rx="6" /><text class="kg-label" x="800" y="526" text-anchor="middle">ISO 42001 认证</text></a>
+          <a class="kg-link" href="practice.html#inventory"><rect class="kg-node-box leaf" x="65" y="504" width="110" height="36" rx="6" /><text class="kg-label" x="120" y="526" text-anchor="middle">AI Inventory</text></a>
+          <a class="kg-link" href="practice.html#gate"><rect class="kg-node-box leaf" x="245" y="504" width="110" height="36" rx="6" /><text class="kg-label" x="300" y="526" text-anchor="middle">评测与门禁</text></a>
+          <a class="kg-link" href="toolkit.html#gap"><rect class="kg-node-box leaf" x="465" y="504" width="110" height="36" rx="6" /><text class="kg-label" x="520" y="526" text-anchor="middle">JD 差距分析</text></a>
+          <a class="kg-link" href="regulations.html#oecd-principles"><rect class="kg-node-box leaf" x="25" y="334" width="110" height="36" rx="6" /><text class="kg-label" x="80" y="356" text-anchor="middle">OECD 原则</text></a>
+          <a class="kg-link" href="regulations.html#nist-ai-rmf"><rect class="kg-node-box leaf" x="180" y="334" width="110" height="36" rx="6" /><text class="kg-label" x="235" y="356" text-anchor="middle">NIST AI RMF</text></a>
+        </svg>
+      </div>
+      <p class="small muted mt-1">图中的连线表示「知识上强相关」，实际组织中这些职能可能合并在同一团队。</p>
+    </div>
+  </section>
+
+  <!-- 学习路径 -->
+  <section class="section">
+    <div class="container">
+      <h2>建议学习路径</h2>
+      <p class="section-lead">按「先框架、后法规、再实践」的顺序，避免一头扎进法条细节：</p>
+      <div class="flow">
+        <div class="flow-step"><div class="num">STEP 1</div><div class="t">建立框架感</div><div class="d">读完本页 + 精读 NIST AI RMF 1.0（约 40 页，是性价比最高的入门文献）</div></div>
+        <div class="flow-step"><div class="num">STEP 2</div><div class="t">吃透一部硬法</div><div class="d">精读 EU AI Act 的风险分级与高风险义务；在华业务则先读网信办规章</div></div>
+        <div class="flow-step"><div class="num">STEP 3</div><div class="t">看真实实践</div><div class="d">读 2–3 份 system card 与公司安全框架（RSP / Preparedness），对照企业实践页</div></div>
+        <div class="flow-step"><div class="num">STEP 4</div><div class="t">动手产出</div><div class="d">用工具箱对一个真实产品做评估；写一篇公开分析作为作品</div></div>
+        <div class="flow-step"><div class="num">STEP 5</div><div class="t">对准岗位</div><div class="d">用 JD 差距分析定位目标岗位，针对性补短板</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 术语表 -->
+  <section class="section">
+    <div class="container">
+      <h2>关键术语表</h2>
+      <p class="section-lead">读 JD 和文献时的高频术语。中文优先，括注通行英文：</p>
+      <div class="grid grid-2 mt-2" id="glossary"></div>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script src="assets/app.js"></script>
+<script>
+const GLOSSARY = [
+  ["AI 清单（AI Inventory）", "组织内所有 AI 系统/用例的登记册：用途、负责人、模型来源、风险等级。一切治理的起点。"],
+  ["风险分级（Risk Tiering）", "按使用场景与潜在影响给用例分级（如禁止/高/中/低），并匹配不同强度的管控。"],
+  ["高风险 AI 系统（High-risk AI System）", "EU AI Act 术语：附件 I / III 所列、对健康安全或基本权利有重大影响的系统，须履行全套义务。"],
+  ["通用目的 AI（GPAI）", "EU AI Act 对基础模型类的称呼；提供者须履行文档、版权、训练数据摘要等义务。"],
+  ["模型卡 / 系统卡（Model / System Card）", "随模型发布的说明文档：能力、评测结果、局限、风险缓解措施。"],
+  ["评测（Evals / Evaluations）", "用标准化任务和指标测量模型能力与风险的方法，是治理中「用证据说话」的核心手段。"],
+  ["红队测试（Red Teaming）", "以攻击者视角主动寻找模型失效与滥用方式：越狱、提示注入、有害输出诱导等。"],
+  ["发布门禁（Launch Gate / Release Review）", "上线前的强制检查点：评测达标、风险评估完成、必要审批齐备才能发布。"],
+  ["护栏（Guardrails）", "运行时的输入/输出控制层：内容过滤、主题限制、工具权限约束等。"],
+  ["影响评估（DPIA / AIA）", "上线前系统评估对个人权利的影响：隐私领域叫 DPIA，算法领域叫算法影响评估（AIA）。"],
+  ["合格评定（Conformity Assessment）", "EU AI Act 下证明高风险系统符合要求的程序，通过后加贴 CE 标识。"],
+  ["算法备案 / 大模型备案", "中国监管要求：具有舆论属性或社会动员能力的算法服务须向网信部门备案。"],
+  ["三道防线（Three Lines of Defense）", "风险管理组织模型：业务自控是第一道，独立风险/合规职能第二道，内部审计第三道。"],
+  ["影子 AI（Shadow AI）", "员工未经审批自行使用的 AI 工具，企业最普遍的治理盲区。"],
+  ["模型漂移（Model Drift）", "线上数据分布变化导致模型性能随时间退化，需要持续监控捕捉。"],
+  ["负责任扩展政策（RSP / Frontier Safety Framework）", "前沿实验室的自我治理框架：模型能力达到预设阈值时，必须先落实对应安全措施才能继续开发或部署。"],
+  ["自动化偏见（Automation Bias）", "人类过度信任自动化系统输出的倾向——「有人工审核」因此可能形同虚设。"],
+  ["幻觉（Hallucination / Confabulation）", "模型生成看似可信但不真实的内容；在高权威场景（法律、医疗、政务）风险被放大。"],
+];
+document.getElementById("glossary").innerHTML = GLOSSARY.map(([t, d]) => {
+  const m = t.match(/^(.*?)（(.*)）$/);
+  const zh = m ? m[1] : t, en = m ? m[2] : "";
+  return `<div class="def"><div class="term">${zh}${en ? `<span class="en">${en}</span>` : ""}</div><div class="desc">${d}</div></div>`;
+}).join("");
+</script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>企业实践 — AI Governance 知识库</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="practice">
+<div id="site-header"></div>
+
+<main>
+  <section class="section">
+    <div class="container">
+      <div class="kicker">Enterprise Practice</div>
+      <h1>企业实践：治理闭环七环节</h1>
+      <p class="section-lead">这一页把「AI 治理」拆成企业内实际运转的七个环节。每个环节说明它是什么、要产出什么交付物、以及最常见的陷阱。方法论主要参考 NIST AI RMF、ISO/IEC 42001 与 SR 11-7 的独立验证传统（来源见各环节标注与<a href="regulations.html">法规页</a>）。</p>
+      <div class="flow">
+        <div class="flow-step"><div class="num">01</div><div class="t">AI 清单</div><div class="d">Inventory</div></div>
+        <div class="flow-step"><div class="num">02</div><div class="t">风险分级</div><div class="d">Risk Tiering</div></div>
+        <div class="flow-step"><div class="num">03</div><div class="t">评估评测</div><div class="d">Assessment & Evals</div></div>
+        <div class="flow-step"><div class="num">04</div><div class="t">发布门禁</div><div class="d">Launch Gate</div></div>
+        <div class="flow-step"><div class="num">05</div><div class="t">持续监控</div><div class="d">Monitoring</div></div>
+        <div class="flow-step"><div class="num">06</div><div class="t">审计追溯</div><div class="d">Audit Trail</div></div>
+        <div class="flow-step"><div class="num">07</div><div class="t">事件响应</div><div class="d">Incident Response</div></div>
+      </div>
+      <p class="flow-loop-note">↻ 事件复盘与外部法规变化回流到清单与分级，形成循环</p>
+    </div>
+  </section>
+
+  <section class="section" id="inventory">
+    <div class="container">
+      <h2>01 · AI 清单（AI Inventory）</h2>
+      <p class="section-lead">回答一个朴素但多数公司答不上来的问题：<b>我们到底有哪些 AI 在跑？</b></p>
+      <div class="grid grid-2">
+        <div class="card"><h3>做什么</h3><p>登记所有 AI 系统与用例：用途、负责人、模型来源（自研/开源/API）、涉及数据、部署地区、状态。入口通常是项目 intake 表单（<a href="toolkit.html#intake">工具箱有模板</a>），存量系统靠一次集中摸排 + 采购/网络数据补盲。范围要包含员工使用的外部 AI 工具（影子 AI）。</p></div>
+        <div class="card"><h3>交付物</h3><p>一张持续维护的清单（起步用表格即可，成熟后进 GRC 平台）；每条记录有唯一负责人；新项目自动进入清单的流程钩子（立项、采购、上线流程中插入登记环节）。</p></div>
+      </div>
+      <div class="note warn mt-2"><p><b>常见陷阱：</b>把清单当一次性普查——三个月后就过时了。清单的生命力来自流程钩子：不登记就拿不到 API key、过不了采购、进不了发布流程，才能保持完整。</p></div>
+    </div>
+  </section>
+
+  <section class="section" id="tiering">
+    <div class="container">
+      <h2>02 · 风险分级（Risk Tiering）</h2>
+      <p class="section-lead">治理资源永远不够，分级决定把力气花在哪。</p>
+      <div class="grid grid-2">
+        <div class="card"><h3>做什么</h3><p>制定一套分级标准（通常 3–4 级），主要看：是否影响个人的重要决定（招聘、信贷、医疗）、是否面向公众、是否处理敏感数据、失效的最坏后果、是否落入法定高风险/禁止类别（对照 EU AI Act 附件 III 与本地法规）。每个等级对应不同的管控强度——低风险快速放行，高风险全套评估。</p></div>
+        <div class="card"><h3>交付物</h3><p>分级标准文档（含判断题式的分级问卷）；每个用例的分级记录与理由；分级–管控矩阵（什么等级必须做什么）。</p></div>
+      </div>
+      <div class="note warn mt-2"><p><b>常见陷阱：</b>①分级问卷太长，业务团队敷衍作答——前 5–8 个问题就应能完成粗分级；②只分级不联动——分级结果必须自动决定后续流程的严格程度，否则就是仪式。</p></div>
+    </div>
+  </section>
+
+  <section class="section" id="evals">
+    <div class="container">
+      <h2>03 · 评估与评测（Assessment & Evals）</h2>
+      <p class="section-lead">治理的可信度取决于证据质量。「demo 看起来不错」不是证据。</p>
+      <div class="grid grid-2">
+        <div class="card"><h3>做什么</h3><p>两层工作：<b>影响评估</b>（这个用例对个人/社会可能造成什么影响？隐私、公平、安全维度各如何？必要时并入 DPIA）与<b>技术评测</b>（任务准确率、安全性/越狱抵抗、公平性指标、鲁棒性）。生成式应用还需要场景化评测集：拿真实业务问题构造测试集，而非只依赖公开基准。使用第三方模型时，供应商的 system card 是输入而非答案——你的场景需要增量评测。</p></div>
+        <div class="card"><h3>交付物</h3><p>影响评估报告（模板化）；评测集与评测报告（含量化验收线）；高风险用例的独立评审记录（评审人不属于开发团队——这是 SR 11-7 独立验证思想的核心）。</p></div>
+      </div>
+      <div class="note warn mt-2"><p><b>常见陷阱：</b>①评测一次定终身——模型升级、提示词修改、用途扩展都应触发重评；②公平性评测只算总体准确率，不做分组比较（参考 NYC LL144 的 impact ratio 方法）；③评测标准由想上线的团队自己定且自己判——至少验收线要有独立方把关。</p></div>
+    </div>
+  </section>
+
+  <section class="section" id="gate">
+    <div class="container">
+      <h2>04 · 发布门禁（Launch Gate）</h2>
+      <p class="section-lead">治理体系有没有「牙齿」，就看这一环。</p>
+      <div class="grid grid-2">
+        <div class="card"><h3>做什么</h3><p>在发布流程中设置强制检查点：清单已登记、分级已完成、对应等级要求的评估评测已通过、法定义务（备案、标识、告知）已落实、监控方案与回滚方案已就绪。高风险用例需治理委员会或授权评审人签字放行；不达标可以「有条件上线」（限流、灰度、加人工审核），但条件必须有追踪与到期日。</p></div>
+        <div class="card"><h3>交付物</h3><p>发布检查单（按风险等级差异化）；评审会议记录与决议；例外审批（exception）登记册及其到期跟踪。</p></div>
+      </div>
+      <div class="note warn mt-2"><p><b>常见陷阱：</b>①门禁没有否决先例——从未拦下过任何项目的门禁只是过场；②例外审批没有到期日，「临时放行」变成永久状态；③门禁只覆盖新项目，存量系统和「小改动」（如换模型版本）绕过检查。</p></div>
+    </div>
+  </section>
+
+  <section class="section" id="monitor">
+    <div class="container">
+      <h2>05 · 持续监控（Monitoring）</h2>
+      <p class="section-lead">上线不是治理的终点，而是风险真正开始的地方。</p>
+      <div class="grid grid-2">
+        <div class="card"><h3>做什么</h3><p>为每个在线 AI 系统定义监控指标与阈值：输出质量抽检（自动 + 人工）、用户投诉与负反馈率、安全护栏触发率、模型漂移信号、异常使用模式。生成式应用还应监控新出现的滥用方式与越狱手法。阈值触发时有明确的响应动作（告警→限流→降级→下线）。</p></div>
+        <div class="card"><h3>交付物</h3><p>各系统的监控仪表盘与告警规则；定期（如季度）复审报告；抽检记录。</p></div>
+      </div>
+      <div class="note warn mt-2"><p><b>常见陷阱：</b>只监控业务指标（转化率、成本），不监控风险指标——系统在「业务上成功、风险上恶化」时没人知道。</p></div>
+    </div>
+  </section>
+
+  <section class="section" id="audit">
+    <div class="container">
+      <h2>06 · 审计与追溯（Audit Trail）</h2>
+      <p class="section-lead">监管检查、客户尽调、事故复盘时，你需要能拿出证据。</p>
+      <div class="grid grid-2">
+        <div class="card"><h3>做什么</h3><p>保证关键决策可追溯：谁在何时批准了什么、依据什么评测结果、当时的模型版本与配置是什么。技术侧保留必要日志（输入输出样本、版本、参数），兼顾隐私要求设定留存期限。体系侧按 ISO 42001 组织文档：政策、程序、记录三层齐备，支持内审与外部认证审计。</p></div>
+        <div class="card"><h3>交付物</h3><p>决策与审批记录；系统日志与版本档案；内审计划与报告；面向客户尽调的标准证据包（问卷答案 + 文档索引）。</p></div>
+      </div>
+      <div class="note warn mt-2"><p><b>常见陷阱：</b>文档为审计而造、与实际操作两张皮——认证审计能过，真出事时完全对不上。文档应从真实流程中自动沉淀，而不是事后补写。</p></div>
+    </div>
+  </section>
+
+  <section class="section" id="incident">
+    <div class="container">
+      <h2>07 · 事件响应（Incident Response）</h2>
+      <p class="section-lead">问题不是「会不会出事」，而是「出事时你的组织第一小时做什么」。</p>
+      <div class="grid grid-2">
+        <div class="card"><h3>做什么</h3><p>定义什么算「AI 事件」（有害输出造成实际影响、歧视性结果被投诉、数据泄露、大规模幻觉误导、被媒体或监管关注等）并分级；建立上报路径（一线员工知道报给谁）；预案覆盖：止损（下线/降级/限流）、根因分析、受影响者补救、对外沟通、法定报告义务（EU AI Act 对高风险系统的严重事件报告有时限要求）；事后复盘回流改进评测与门禁。</p></div>
+        <div class="card"><h3>交付物</h3><p>事件定义与分级标准；响应预案（含联系人矩阵与决策权限）；事件登记册与复盘报告；至少一次桌面演练记录。</p></div>
+      </div>
+      <div class="note warn mt-2"><p><b>常见陷阱：</b>把 AI 事件塞进普通客诉流程——客服没有权限也没有意识把「模型建议用户违法」升级为治理事件。参考<a href="resources.html">案例页</a>的加航与纽约 MyCity 案例。</p></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>不同阶段公司的起步建议</h2>
+      <div class="grid grid-3 mt-2">
+        <div class="card"><h3>初创公司（&lt;100人）</h3><p>不要照搬大厂体系。三件事起步：①一页纸 AI 使用政策；②用例清单（一张表）；③高风险用例的上线前 checklist（用<a href="toolkit.html#checklist">工具箱清单</a>裁剪）。指定一个人负责，哪怕兼职。</p></div>
+        <div class="card"><h3>成长期（100–1000人）</h3><p>把治理嵌入既有流程：立项模板加 intake 字段、发布流程加门禁项、采购流程加供应商 AI 尽调。开始做分级，让低风险快速通过以换取业务配合。B2B 业务考虑启动 ISO 42001 差距评估。</p></div>
+        <div class="card"><h3>大型企业</h3><p>重点是整合与自动化：治理平台承接清单与工作流、评测自动化、三道防线明确分工、合规矩阵按司法辖区维护、对监管与认证形成常态化对接。警惕流程摩擦扼杀业务侧配合意愿。</p></div>
+      </div>
+      <div class="source-line mt-2">方法论来源：NIST AI RMF 1.0（2023-01）及 Playbook；ISO/IEC 42001:2023；Federal Reserve SR 11-7（2011-04）；各来源详见<a href="regulations.html">法规与标准</a>页。</div>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script src="assets/app.js"></script>
+</body>
+</html>
