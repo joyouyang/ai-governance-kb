@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>学术研究 — AI Governance 知识库</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="research">
+<div id="site-header"></div>
+
+<main>
+  <section class="section">
+    <div class="container">
+      <div class="kicker">Academic Research</div>
+      <h1>学术研究</h1>
+      <p class="section-lead">企业治理实践中的每个机制——模型卡、公平性指标、红队、评测门禁——背后都有一篇或几篇奠基论文。这一页帮你把论文和实践连起来：<a href="#topics">主题地图</a> → <a href="#papers">论文库</a>（可筛选）→ <a href="#reading">阅读路径</a> → <a href="#r2p">研究到实践</a> → <a href="#orgs">机构、会议与学者索引</a>。</p>
+      <div class="note"><p><b>引用说明：</b>所有条目均为真实文献，链接指向 arXiv、出版社或机构官方页面，标注首次发布日期。预印本（arXiv）未经同行评审，正式引用时请核对期刊/会议版本。摘要为本站编写的中文导读，理解偏差以原文为准。</p></div>
+    </div>
+  </section>
+
+  <!-- 主题地图 -->
+  <section class="section anchor-offset" id="topics">
+    <div class="container">
+      <h2>研究主题地图</h2>
+      <p class="section-lead">十个研究方向。每个方向标出核心张力与它在企业实践中的落点，点击论文名跳转详情：</p>
+      <div class="grid grid-2 mt-2" id="topic-cards"></div>
+    </div>
+  </section>
+
+  <!-- 论文库 -->
+  <section class="section anchor-offset" id="papers">
+    <div class="container">
+      <h2>论文库</h2>
+      <p class="section-lead">每篇含：研究问题、核心观点、方法、主要发现、局限性、与企业实践的关系、适合人群与原始链接。</p>
+      <div class="filter-bar"><span class="label">主题：</span><span id="f-topic" style="display:contents"></span></div>
+      <div class="filter-bar" style="margin-top:-10px"><span class="label">年代：</span><span id="f-year" style="display:contents"></span></div>
+      <div class="filter-bar" style="margin-top:-10px"><span class="label">机构：</span><span id="f-inst" style="display:contents"></span></div>
+      <div class="filter-bar" style="margin-top:-10px"><span class="label">实践相关性：</span><span id="f-rel" style="display:contents"></span></div>
+      <p class="small muted" id="paper-count"></p>
+      <div id="paper-list"></div>
+    </div>
+  </section>
+
+  <!-- 阅读路径 -->
+  <section class="section anchor-offset" id="reading">
+    <div class="container">
+      <h2>必读清单：三级阅读路径</h2>
+      <p class="section-lead">按知识门槛分级。标 ★ 的是每级优先阅读的核心篇目；点击标题跳到论文详情。</p>
+      <div class="grid grid-3 mt-2" id="reading-paths"></div>
+    </div>
+  </section>
+
+  <!-- 研究到实践 -->
+  <section class="section anchor-offset" id="r2p">
+    <div class="container">
+      <h2>研究到实践：学术成果如何变成治理机制</h2>
+      <p class="section-lead">从「论文」到「企业机制」再到「合规与审计证据」的转化链条——也是面试中展示知识纵深的最佳素材：</p>
+      <div class="table-wrap mt-2" id="r2p-table"></div>
+    </div>
+  </section>
+
+  <!-- 机构与会议索引 -->
+  <section class="section anchor-offset" id="orgs">
+    <div class="container">
+      <h2>研究机构索引</h2>
+      <div class="grid grid-2 mt-2" id="org-list"></div>
+
+      <h2 class="mt-3">会议与发表渠道</h2>
+      <div class="deflist mt-2" id="conf-list"></div>
+
+      <h2 class="mt-3">代表性学者</h2>
+      <p class="section-lead">按名字追论文是入门后最高效的文献策略。方向标注供检索用：</p>
+      <div class="table-wrap mt-2" id="scholar-table"></div>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script src="assets/app.js"></script>
+<script src="data/research.js"></script>
+<script>
+const paperById = Object.fromEntries(KB_PAPERS.map(p => [p.id, p]));
+const relTone = { "高": "teal", "中": "gray" };
+const levelTone = { "入门": "blue", "进阶": "teal", "研究级": "warn" };
+
+/* ---------- 主题地图 ---------- */
+document.getElementById("topic-cards").innerHTML = KB_RESEARCH_TOPICS.map(t => `
+  <div class="card">
+    <div class="card-en">${esc(t.en)}</div>
+    <h3>${esc(t.name)}</h3>
+    <p>${esc(t.desc)}</p>
+    <p class="small" style="margin-top:8px"><b>核心张力：</b><span class="muted">${esc(t.keyQ)}</span></p>
+    <p class="small" style="margin-top:4px"><b>实践落点：</b><span class="muted">${esc(t.practice)}</span></p>
+    <p class="small" style="margin-top:8px">${t.papers.map(id => paperById[id] ? `<a href="#${id}" class="paper-jump">${esc(paperById[id].titleZh.split("（")[0].split("：")[0])}</a>` : "").filter(Boolean).join(" · ")}</p>
+  </div>`).join("");
+
+/* ---------- 论文库（四维筛选） ---------- */
+const yearBuckets = [
+  { value: "全部", label: "全部", test: () => true },
+  { value: "le2016", label: "2016 及以前", test: y => y <= 2016 },
+  { value: "17-19", label: "2017–2019", test: y => y >= 2017 && y <= 2019 },
+  { value: "20-22", label: "2020–2022", test: y => y >= 2020 && y <= 2022 },
+  { value: "23+", label: "2023 至今", test: y => y >= 2023 },
+];
+let fTopic = "全部", fYear = "全部", fInst = "全部", fRel = "全部";
+
+function paperCard(p) {
+  return `
+  <div class="acc" id="${p.id}">
+    <div class="acc-head">
+      <div>
+        <div class="t">${esc(p.titleZh)} ${badge(p.level, levelTone[p.level])} ${p.relevance === "高" ? badge("实践相关性高", "teal") : ""} ${p.mustRead ? '<span class="badge badge-blue">★ 必读</span>' : ""}</div>
+        <div class="small muted">${esc(p.title)}</div>
+        <div class="small muted">${esc(p.authors)} · ${esc(p.venue)} · ${esc(p.date)}</div>
+      </div>
+      <span class="chev">▶</span>
+    </div>
+    <div class="acc-body">
+      <p class="small" style="margin-top:10px">${p.topics.map(t => `<span class="tag">${esc(t)}</span>`).join("")}<span class="tag">${esc(p.inst)}</span></p>
+      <h4>研究问题</h4><p class="muted small">${esc(p.question)}</p>
+      <h4>核心观点</h4><p class="muted small">${esc(p.idea)}</p>
+      <h4>方法</h4><p class="muted small">${esc(p.method)}</p>
+      <h4>主要发现</h4><p class="muted small">${esc(p.findings)}</p>
+      <h4>局限性</h4><p class="muted small">${esc(p.limits)}</p>
+      <h4>与企业实践的关系</h4><p class="muted small">${esc(p.practice)}</p>
+      <h4>适合谁读</h4><p class="muted small">${esc(p.audience)}</p>
+      ${sourceLine({ label: p.venue + "（原文链接）", url: p.url, date: p.date }, "原文")}
+    </div>
+  </div>`;
+}
+
+function renderPapers() {
+  const yb = yearBuckets.find(b => b.value === fYear);
+  const list = KB_PAPERS.filter(p =>
+    (fTopic === "全部" || p.topics.includes(fTopic)) &&
+    yb.test(p.year) &&
+    (fInst === "全部" || p.inst === fInst) &&
+    (fRel === "全部" || p.relevance === fRel)
+  ).sort((a, b) => b.year - a.year || a.titleZh.localeCompare(b.titleZh, "zh"));
+  document.getElementById("paper-list").innerHTML = list.length ? list.map(paperCard).join("") : `<p class="muted">该筛选条件下暂无论文。</p>`;
+  document.getElementById("paper-count").textContent = `共 ${list.length} 篇（按年份倒序）`;
+  makeAccordion(document.getElementById("paper-list"));
+}
+
+renderFilterChips(document.getElementById("f-topic"),
+  ["全部", ...KB_RESEARCH_TOPICS.map(t => t.name)].map(v => ({ value: v, label: v })),
+  v => { fTopic = v; renderPapers(); });
+renderFilterChips(document.getElementById("f-year"),
+  yearBuckets.map(b => ({ value: b.value, label: b.label })),
+  v => { fYear = v; renderPapers(); });
+renderFilterChips(document.getElementById("f-inst"),
+  ["全部", ...new Set(KB_PAPERS.map(p => p.inst))].map(v => ({ value: v, label: v })),
+  v => { fInst = v; renderPapers(); });
+renderFilterChips(document.getElementById("f-rel"),
+  ["全部", "高", "中"].map(v => ({ value: v, label: v === "全部" ? "全部" : `实践相关性${v}` })),
+  v => { fRel = v; renderPapers(); });
+
+/* ---------- 阅读路径 ---------- */
+const levelDesc = {
+  "入门": "不需要机器学习背景即可读懂，建立领域地图与共同语言。",
+  "进阶": "需要基本技术素养；覆盖治理实践直接依赖的方法论文。",
+  "研究级": "前沿工作，读原文需投入；适合评测/研究方向深耕者。",
+};
+document.getElementById("reading-paths").innerHTML = ["入门", "进阶", "研究级"].map(lv => {
+  const papers = KB_PAPERS.filter(p => p.level === lv).sort((a, b) => (b.mustRead - a.mustRead) || a.year - b.year);
+  return `
+  <div class="card">
+    <h3>${lv} ${badge(`${papers.length} 篇`, "gray")}</h3>
+    <p class="small muted">${levelDesc[lv]}</p>
+    <ul class="small" style="margin-top:10px">
+      ${papers.map(p => `<li>${p.mustRead ? "★ " : ""}<a href="#${p.id}" class="paper-jump">${esc(p.titleZh.split("（")[0].split("：")[0])}</a> <span class="muted">(${p.year})</span></li>`).join("")}
+    </ul>
+  </div>`;
+}).join("");
+
+/* ---------- 研究到实践 ---------- */
+document.getElementById("r2p-table").innerHTML = `
+  <table>
+    <thead><tr><th>学术源头</th><th>企业中的机制</th><th>合规与审计对应</th></tr></thead>
+    <tbody>${KB_R2P.map(r => `
+      <tr>
+        <td>${esc(r.research)}<span class="en-sub">${r.refs.map(id => `<a href="#${id}" class="paper-jump">详情</a>`).join(" · ")}</span></td>
+        <td>${esc(r.mechanism)}</td>
+        <td>${esc(r.compliance)}</td>
+      </tr>`).join("")}
+    </tbody>
+  </table>`;
+
+/* ---------- 机构、会议、学者 ---------- */
+document.getElementById("org-list").innerHTML = KB_ORGS.map(o => `
+  <div class="card">
+    <h3 style="font-size:1rem"><a href="${o.url}" target="_blank" rel="noopener">${esc(o.name)}</a></h3>
+    <p><b>方向：</b>${esc(o.focus)}</p>
+    <p class="small" style="margin-top:4px">${esc(o.note)}</p>
+  </div>`).join("");
+
+document.getElementById("conf-list").innerHTML = KB_CONFS.map(c => `
+  <div class="def">
+    <div class="term"><a href="${c.url}" target="_blank" rel="noopener">${esc(c.name)}</a></div>
+    <div class="desc">${esc(c.note)}</div>
+  </div>`).join("");
+
+document.getElementById("scholar-table").innerHTML = `
+  <table>
+    <thead><tr><th>学者</th><th>机构</th><th>方向</th><th>代表工作</th></tr></thead>
+    <tbody>${KB_SCHOLARS.map(s => `
+      <tr><td>${esc(s.name)}</td><td>${esc(s.affil)}</td><td>${esc(s.field)}</td><td>${esc(s.known)}</td></tr>`).join("")}
+    </tbody>
+  </table>`;
+
+/* ---------- 锚点跳转时自动展开论文卡片 ---------- */
+function openTarget(id) {
+  const t = document.getElementById(id);
+  if (t && t.classList.contains("acc")) t.classList.add("open");
+}
+window.addEventListener("load", () => {
+  const id = location.hash.slice(1);
+  if (id) { openTarget(id); const t = document.getElementById(id); if (t) t.scrollIntoView({ behavior: "smooth", block: "start" }); }
+});
+document.addEventListener("click", e => {
+  const a = e.target.closest("a.paper-jump");
+  if (a) openTarget(a.getAttribute("href").slice(1));
+});
+</script>
+</body>
+</html>

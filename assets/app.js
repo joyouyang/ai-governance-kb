@@ -5,13 +5,14 @@
 
 const KB = {
   siteName: "AI Governance 知识库",
-  updated: "2026-08-09", // 每次更新内容后修改此日期
+  updated: "2026-08-10", // 每次更新内容后修改此日期
   nav: [
     { id: "home",      href: "index.html",       label: "首页" },
     { id: "map",       href: "map.html",          label: "知识地图" },
     { id: "regs",      href: "regulations.html",  label: "法规与标准" },
     { id: "practice",  href: "practice.html",     label: "企业实践" },
     { id: "careers",   href: "careers.html",      label: "职业地图" },
+    { id: "research",  href: "research.html",     label: "学术研究" },
     { id: "resources", href: "resources.html",    label: "案例与资源" },
     { id: "toolkit",   href: "toolkit.html",      label: "工具箱" },
   ],

@@ -25,6 +25,7 @@ ai-governance-kb/
 ├── regulations.html    法规与标准：15 个条目（可筛选）+ 三大基准对比表
 ├── practice.html       企业实践：治理闭环七环节详解 + 分阶段起步建议
 ├── careers.html        职业地图：8 类岗位详情 + 转型路径速查
+├── research.html       学术研究：主题地图 + 论文库（四维筛选）+ 阅读路径 + 研究到实践 + 机构/会议/学者索引
 ├── resources.html      案例与资源：7 个事故案例 + 20+ 精选资源 + JD 解读
 ├── toolkit.html        工具箱：4 个本地运行的交互工具
 ├── assets/
@@ -33,6 +34,7 @@ ai-governance-kb/
 └── data/               ★ 内容数据层——日常更新只需要改这里
     ├── regulations.js  法规与标准 + 对比表
     ├── careers.js      技能分类、技能库、岗位、转型路径
+    ├── research.js     研究主题、论文库、研究到实践、机构/会议/学者索引
     ├── resources.js    案例、资源、JD 解读
     └── toolkit-data.js 风险清单、成熟度题库、intake 字段
 ```
@@ -65,6 +67,29 @@ ai-governance-kb/
 ### 新增一个岗位（`data/careers.js`）
 
 岗位通过 `skills.core` / `skills.plus` 引用技能库 `KB_SKILLS` 中的技能 id；工具箱的「JD 差距分析」自动使用同一份数据。新增技能时给出 `learn` 字段（怎么补齐这项技能）。
+
+### 新增一篇论文（`data/research.js`）
+
+```js
+{
+  id: "unique-id",              // 唯一 ID，用作锚点（research.html#unique-id 直达并展开）
+  title: "英文原题（保留原文）",
+  titleZh: "中文译名",
+  authors: "First Author, et al.",
+  venue: "发表会议/期刊/机构", year: 2024, date: "YYYY-MM",   // date 为首次发布（预印本）时间
+  inst: "高校/学术界",          // 高校/学术界 | Anthropic | OpenAI | Google/DeepMind | 产业界（…）| 跨机构
+  topics: ["评测"],             // 取值必须来自 KB_RESEARCH_TOPICS 的十个主题名
+  level: "进阶",                // 入门 | 进阶 | 研究级（决定阅读路径分组）
+  relevance: "高",              // 高 | 中（实践相关性筛选）
+  mustRead: false,              // true 则在阅读路径中标 ★ 置顶
+  question: "研究问题", idea: "核心观点", method: "方法",
+  findings: "主要发现", limits: "局限性",
+  practice: "与企业 AI 治理实践的关系", audience: "适合谁读",
+  url: "https://arxiv.org/abs/XXXX.XXXXX",   // 必须是真实可确认的原文链接
+}
+```
+
+**引用纪律（比法规条目更严格）**：只收录能确认标题、作者、年份与链接的真实论文；`url` 必须指向 arXiv 摘要页、出版社 DOI 页或机构官方页；不确定的论文宁可不收，绝不虚构。新增主题时同步更新 `KB_RESEARCH_TOPICS`（主题名是筛选器与 topics 字段的枚举值）。
 
 ### 新增案例/资源（`data/resources.js`）
 
